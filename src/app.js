@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-
+import "./database/index.js"
 
 import routes from "./routes.js"
 
