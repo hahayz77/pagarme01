@@ -6,6 +6,7 @@ import TransactionController from "./controllers/TransactionController.js"
 
 const routes = new Router();
 
+routes.get("/", (req, res)=>{ res.send("It's working!") })
 
 routes.get("/carts", CartsController.index)
 routes.post("/carts", CartsController.create)
