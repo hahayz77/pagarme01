@@ -2,7 +2,7 @@ import Cart from "../models/Cart.js"
 import Transaction from "../models/Transaction.js"
 
 class TransactionService {
-    async process(cartCode, paymentType, installments, custumer, billing, creditCard) {
+        async process({cartCode, paymentType, installments, custumer, billing, creditCard}) {
         const cart = await Cart.findOne({ code: cartCode });
         if(!cart) throw `Cart ${cartCode} was not found.`;
         

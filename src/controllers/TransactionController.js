@@ -59,38 +59,37 @@ class TransactionController {
 
             if (!(await schema.isValid(req.body))) return res.status(400).json({ err: "Error on validate schema" })
 
-            // const cart = Cart.findOne({code: cartCode});
-            // if(!cart) return res.send(404).json();
+            const cart = Cart.findOne({code: cartCode});
+            if(!cart) return res.send(404).json();
 
-            // const service = new TransactionService();
-            // const response = await service.process({
-            //     cartCode,
-            //     paymentType,
-            //     installments,
-            //     custumer: {
-            //         name: custumerName,
-            //         email: custumerEmail,
-            //         mobile: custumerMobile,
-            //         document: custumerDocument,
-            //     },
-            //     billing: {
-            //         address: billingAddress,
-            //         number: billingNumber,
-            //         neighborhood: billingNeighborhood,
-            //         city: billingCity,
-            //         state: billingState,
-            //         code: billingZipCode,
-            //     },
-            //     creditCard: {
-            //         number: creditCardNumber,
-            //         expiration: creditCardExpiration,
-            //         holderName: creditCardHolderName,
-            //         cvv: creditCardCvv,
-            //     }
-            // });
+            const service = new TransactionService();
+            const response = await service.process({
+                cartCode,
+                paymentType,
+                installments,
+                custumer: {
+                    name: custumerName,
+                    email: custumerEmail,
+                    mobile: custumerMobile,
+                    document: custumerDocument,
+                },
+                billing: {
+                    address: billingAddress,
+                    number: billingNumber,
+                    neighborhood: billingNeighborhood,
+                    city: billingCity,
+                    state: billingState,
+                    code: billingZipCode,
+                },
+                creditCard: {
+                    number: creditCardNumber,
+                    expiration: creditCardExpiration,
+                    holderName: creditCardHolderName,
+                    cvv: creditCardCvv,
+                }
+            });
 
-            // return res.status(200).json(response)
-            return res.status(201).json()
+            return res.status(200).json(response)
         } catch (err) {
             console.log(err)
             return res.status(500).json(err)
