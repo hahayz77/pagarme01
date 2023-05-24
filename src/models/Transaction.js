@@ -27,10 +27,7 @@ const transactionSchema = new mongoose.Schema({
     paymentType: {
         type: String,
         required: true,
-        enum: [
-            "billet",
-            "credit_cart"
-        ]
+        enum: [ "billet","credit_card" ]
     },
     installments: {
         type: Number,
