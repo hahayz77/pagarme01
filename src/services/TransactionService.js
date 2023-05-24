@@ -1,3 +1,5 @@
+import { v4 as uidv4 } from "uuid" ;
+
 import Cart from "../models/Cart.js"
 import Transaction from "../models/Transaction.js"
 
@@ -8,7 +10,7 @@ class TransactionService {
         
         const transaction = await Transaction.create({
             cartCode: cart.code,
-            code: "abc123",
+            code: await uidv4(),
             total: cart.price,
             paymentType,
             installments,
