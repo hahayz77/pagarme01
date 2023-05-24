@@ -41,16 +41,16 @@ const transactionSchema = new mongoose.Schema({
     processorReponse: {
         type: String,
     },
-    custumerEmail: {
+    customerEmail: {
         type: String,
     },
-    custumerNumber: {
+    customerNumber: {
         type: String,
     },
-    custumerMobile: {
+    customerMobile: {
         type: String,
     },
-    custumerDocument: {
+    customerDocument: {
         type: String,
     },
     billingAddress: {

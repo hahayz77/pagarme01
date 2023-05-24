@@ -12,10 +12,10 @@ class TransactionController {
                 cartCode,
                 paymentType,
                 installments,
-                custumerName,
-                custumerEmail,
-                custumerMobile,
-                custumerDocument,
+                customerName,
+                customerEmail,
+                customerMobile,
+                customerDocument,
                 billingAddress,
                 billingNumber,
                 billingNeighborhood,
@@ -35,11 +35,11 @@ class TransactionController {
                     .min(1)
                     // .when("paymentType", {is: "credit_card", then: (schema) => schema.max(12), otherwise: (schema) => schema.max(1)}),
                     .when("paymentType", ([paymentType], schema) => paymentType === "credit_card" ? schema.max(12) : schema.max(1)),
-                custumerName: yup.string().required().min(3),
-                custumerEmail: yup.string().required().email(),
-                custumerMobile: yup.string().required()
+                customerName: yup.string().required().min(3),
+                customerEmail: yup.string().required().email(),
+                customerMobile: yup.string().required()
                     .test("is-valid-mobile", "${path} is not a mobile number", (value) => parsePhoneNumber(value, "BR").isValid()),
-                custumerDocument: yup.string().required()
+                customerDocument: yup.string().required()
                     .test("is-valid-document", "${path} is not a valid CPF / CNPJ", (value) => cpf.isValid(value) || cnpj.isValid(value)),
                 billingAddress: yup.string().required(),
                 billingNumber: yup.string().required(),
@@ -67,11 +67,11 @@ class TransactionController {
                 cartCode,
                 paymentType,
                 installments,
-                custumer: {
-                    name: custumerName,
-                    email: custumerEmail,
-                    mobile: custumerMobile,
-                    document: custumerDocument,
+                customer: {
+                    name: customerName,
+                    email: customerEmail,
+                    mobile: customerMobile,
+                    document: customerDocument,
                 },
                 billing: {
                     address: billingAddress,

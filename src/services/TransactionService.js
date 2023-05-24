@@ -4,7 +4,7 @@ import Cart from "../models/Cart.js"
 import Transaction from "../models/Transaction.js"
 
 class TransactionService {
-        async process({cartCode, paymentType, installments, custumer, billing, creditCard}) {
+        async process({cartCode, paymentType, installments, customer, billing, creditCard}) {
         const cart = await Cart.findOne({ code: cartCode });
         if(!cart) throw `Cart ${cartCode} was not found.`;
         
@@ -15,10 +15,10 @@ class TransactionService {
             paymentType,
             installments,
             status: "started",
-            custumerName: custumer.name,
-            custumerEmail: custumer.email,
-            custumerMobile: custumer.mobile,
-            custumerDocument: custumer.document,
+            customerName: customer.name,
+            customerEmail: customer.email,
+            customerMobile: customer.mobile,
+            customerDocument: customer.document,
             billingAddress: billing.address,
             billingNumber: billing.number,
             billingNeighborhood: billing.neighborhood,
@@ -30,6 +30,7 @@ class TransactionService {
             creditCardHolderName: creditCard.holderName,
             creditCardCvv: creditCard.cvv,
         })
+        
         return transaction;
     }
 }
