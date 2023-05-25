@@ -93,7 +93,7 @@ class TransactionController {
                     neighborhood: billingNeighborhood,
                     city: billingCity,
                     state: billingState,
-                    code: billingZipCode,
+                    zipcode: billingZipCode,
                 },
                 creditCard: {
                     number: creditCardNumber,

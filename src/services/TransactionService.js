@@ -3,7 +3,15 @@ import { v4 as uidv4 } from "uuid" ;
 import Cart from "../models/Cart.js"
 import Transaction from "../models/Transaction.js"
 
+import PagarMeProvider from "../providers/PagarMeProvider.js";
+
 class TransactionService {
+
+        paymentProvider;
+        constructor(paymentProvider){
+            this.paymentProvider = paymentProvider || new PagarMeProvider()
+        }
+
         async process({cartCode, paymentType, installments, customer, billing, creditCard}) {
         const cart = await Cart.findOne({ code: cartCode });
         if(!cart) throw `Cart ${cartCode} was not found.`;
@@ -29,6 +37,16 @@ class TransactionService {
             creditCardExpiration: creditCard.expiration,
             creditCardHolderName: creditCard.holderName,
             creditCardCvv: creditCard.cvv,
+        })
+
+        this.paymentProvider.process({
+            transactionCode: transaction.code,
+            total: transaction.total,
+            paymentType,
+            installments,
+            customer,
+            billing,
+            creditCard,
         })
         
         return transaction;
