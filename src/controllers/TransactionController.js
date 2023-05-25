@@ -50,17 +50,31 @@ class TransactionController {
                 creditCardNumber: yup.string()
                     .when("paymentType", ([paymentType], schema) => paymentType === "credit_card" ? schema.required() : schema),
                 creditCardHolderName: yup.string()
-                .when("paymentType", ([paymentType], schema) => paymentType === "credit_card" ? schema.required() : schema),
+                    .when("paymentType", ([paymentType], schema) => paymentType === "credit_card" ? schema.required() : schema),
                 creditCardCvv: yup.string()
                     .when("paymentType", ([paymentType], schema) => paymentType === "credit_card" ? schema.required() : schema),
                 creditCardExpiration: yup.string()
-                .when("paymentType", ([paymentType], schema) => paymentType === "credit_card" ? schema.required() : schema),
+                    .when("paymentType", ([paymentType], schema) => paymentType === "credit_card" ? schema.required() : schema),
             })
 
-            if (!(await schema.isValid(req.body))) return res.status(400).json({ err: "Error on validate schema" })
+            const isValid = await schema.isValid(req.body);
 
-            const cart = Cart.findOne({code: cartCode});
-            if(!cart) return res.send(404).json();
+            if (!isValid) {
+                const errors = {};
+
+                try {
+                    await schema.validate(req.body, { abortEarly: false });
+                } catch (validationErrors) {
+                    validationErrors.inner.forEach((error) => {
+                        errors[error.path] = error.message;
+                    });
+                }
+
+                return res.status(400).json({ errors });
+            }
+
+            const cart = Cart.findOne({ code: cartCode });
+            if (!cart) return res.send(404).json();
 
             const service = new TransactionService();
             const response = await service.process({
@@ -70,7 +84,7 @@ class TransactionController {
                 customer: {
                     name: customerName,
                     email: customerEmail,
-                    mobile: customerMobile,
+                    mobile: parsePhoneNumber(customerMobile, "BR").format("E.164"),
                     document: customerDocument,
                 },
                 billing: {
