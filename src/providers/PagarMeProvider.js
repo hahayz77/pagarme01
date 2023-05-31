@@ -1,4 +1,5 @@
 import { cpf } from "cpf-cnpj-validator"
+import pagarme from 'pagarme'
 
 class PagarMeProvider {
     async process({
@@ -101,7 +102,25 @@ class PagarMeProvider {
             ...metadataParams
         }
 
-        console.debug("transactionParams", transactionParams);
+        try {
+            // console.log(process.env.SECRET_KEY)
+            // const client = await pagarme.client.connect({ api_key: process.env.SECRET_KEY })
+            // console.debug(client);
+            // const response = await client.transactions.create(transactionParams);
+            // console.debug("response", response);
+
+            pagarme.client.connect({ api_key: process.env.ENCODED_KEY })
+            .then(client => client.transactions.create({
+                amount: 1000,
+                card_number: '4111111111111111',
+                card_holder_name: 'abc',
+                card_expiration_date: '1225',
+                card_cvv: '123',
+            }))
+        } catch (err) {
+            console.debug("err", err);
+
+        }
 
     }
 
