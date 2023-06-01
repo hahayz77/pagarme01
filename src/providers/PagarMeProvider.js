@@ -1,5 +1,5 @@
 import { cpf } from "cpf-cnpj-validator"
-import pagarme from 'pagarme'
+import axios from 'axios'
 
 class PagarMeProvider {
     async process({
@@ -95,12 +95,88 @@ class PagarMeProvider {
         const transactionParams = {
             async: false,
             // postback_url:,
-            ...paymentParams,
-            ...customerParams,
-            ...billingParams,
-            ...itemsParams,
-            ...metadataParams
+            // ...paymentParams,
+            // ...customerParams,
+            // ...billingParams,
+            // ...itemsParams,
+            // ...metadataParams
         }
+
+        const headers = {
+            'Content-type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Basic c2tfdGVzdF80WHFMWjRSdGt1TFJWd3l4Og=='
+        };
+
+        const body = `{
+            "customer": {
+              "address": {
+                "country": "BR",
+                "state": "PE",
+                "city": "Recife",
+                "zip_code": "5420000",
+                "line_1": "Rua balbal"
+              },
+              "phones": {
+                "home_phone": {
+                  "country_code": "55",
+                  "area_code": "81",
+                  "number": "999999999"
+                }
+              },
+              "name": "Tony Stark",
+              "email": "avengerstark@ligadajustica.com.br",
+              "type": "individual",
+              "code": "123123edasdasd",
+              "document": "64010417064",
+              "document_type": "CPF",
+              "gender": "male",
+              "birthdate": "11/10/1980"
+            },
+            "items": [
+              {
+                "amount": 2990,
+                "description": "Chaveiro do Tesseract",
+                "quantity": 1,
+                "code": "dasdasdasda"
+              }
+            ],
+            "shipping": {
+              "address": {
+                "country": "US",
+                "state": "CA",
+                "city": "Malibu",
+                "zip_code": "90265",
+                "line_1": "10880, Malibu Point, Malibu Central"
+              },
+              "amount": 100,
+              "description": "Stark",
+              "recipient_name": "Tony Stark",
+              "recipient_phone": "24586787867"
+            },
+            "payments": [
+              {
+                "credit_card": {
+                  "card": {
+                    "number": "4111111111111111",
+                    "holder_name": "Tony Stark",
+                    "exp_month": 1,
+                    "exp_year": 30,
+                    "cvv": "123",
+                    "holder_document": "64010417064"
+                  },
+                  "installments": 6,
+                  "statement_descriptor": "AVENGERS"
+                },
+                "payment_method": "credit_card"
+              }
+            ],
+            "closed": false,
+            "ip": "52.168.67.32",
+            "code": "COSTUMER_ID_01",
+            "customer_id": "cus_5r0L6ZrHDec46jBO"
+          }`
+
 
         try {
             // console.log(process.env.SECRET_KEY)
@@ -109,16 +185,11 @@ class PagarMeProvider {
             // const response = await client.transactions.create(transactionParams);
             // console.debug("response", response);
 
-            pagarme.client.connect({ api_key: process.env.ENCODED_KEY })
-            .then(client => client.transactions.create({
-                amount: 1000,
-                card_number: '4111111111111111',
-                card_holder_name: 'abc',
-                card_expiration_date: '1225',
-                card_cvv: '123',
-            }))
+            const response = await axios.post('https://api.pagar.me/core/v5/orders', JSON.parse(body), { headers });
+            console.log('Resposta:', response.data);
+
         } catch (err) {
-            console.debug("err", err);
+            console.debug("err", err.response);
 
         }
 
